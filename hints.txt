@@ -1,3 +1,27 @@
 First Output After Seed Load:
    - After loading the seed, the first output is NOT simply the MSB 8 bits of the seed
    - You must run the PRBS algorithm once starting from the loaded seed
+
+Seed Processing:
+   - Before storing the seed into the LFSR, the seed must be processed through 8 iterations of the PRBS feedback polynomial
+   - This processing happens in combinational logic before the seed is loaded into the LFSR register
+
+Load Signal Edge Detection:
+   - The load signal must transition from LOW to HIGH to trigger seed loading
+   - Use a registered version of the load signal (e.g., load_d1) to detect this edge
+   - Check for: load is HIGH AND load_d1 is LOW
+
+8-Bit Output Generation:
+   - Each clock cycle must generate 8 bits of output, not just 1 bit
+   - Use a loop to shift the LFSR 8 times, extracting one bit per iteration
+   - The MSB of the output corresponds to the first bit extracted from the LFSR
+
+Enable Signal Behavior:
+   - When enable is LOW, the output (prbs_out) should remain stable and not change
+   - Only update prbs_out when enable is HIGH
+   - The LFSR state may continue to update, but the output should hold its value when disabled
+
+LFSR Masking:
+   - The LFSR register must be masked based on prbs_type to use only the relevant bits
+   - PRBS7 uses bits [6:0], PRBS9 uses [8:0], PRBS15 uses [14:0], PRBS31 uses [30:0]
+   - Apply this mask when storing the LFSR state to prevent unused bits from affecting the sequence
