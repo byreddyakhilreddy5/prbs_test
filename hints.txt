@@ -1,0 +1,3 @@
+First Output After Seed Load:
+   - After loading the seed, the first output is NOT simply the MSB 8 bits of the seed
+   - You must run the PRBS algorithm once starting from the loaded seed
